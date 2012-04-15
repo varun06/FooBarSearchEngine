@@ -1,56 +1,28 @@
-#Triple Gold Star
-
-#Only A Little Lucky
-
-#The Feeling Lucky question (from the regular homework) assumed it was enough to
-#find the best-ranked page for a given query. For most queries, though, we don't
-#just want the best page (according to the page ranking algorithm), we want a
-#list of many pages that match the query, ordered from the most likely to be
-#useful to the least likely.
-
-#Your goal for this question is to define a procedure, ordered_search(index,
-#ranks, keyword), that takes the same inputs as lucky_search from Question 5,
-#but returns an ordered list of all the URLs that match the query.
-
-#To order the pages, use the quicksort algorithm, invented by Sir Tony Hoare in
-#1959. Quicksort provides a way to sort any list of data, using an expected
-#number of comparisons that scales as n log n where n is the number of elements
-#in the list.
-
-#The idea of quicksort is quite simple:
-
-#If the list has zero or one elements, it is already sorted.
-
-#Otherwise, pick a pivot element, and split the list into two partitions: one
-#contains all the elements equal to or lower than the value of the pivot
-#element, and the other contains all the elements that are greater than the
-#pivot element. Recursively sort each of the sub-lists, and then return the
-#result of concatenating the sorted left sub-list, the pivot element, and the
-#sorted right sub-list.
-
-#For simplicity, use the first element in the list as your pivot element (this
-#is not usually a good choice, since it means if the input list is already
-#nearly sorted, the actual work will be much worse than expected).
-
+def quciksort_pages(pages,ranks):
+    if not pages or len(pages) <= 1:
+        return pages
+    else:
+        pivot = ranks[pages[0]] 
+        worse = []
+        better = []
+        for page in pages[1:]:
+            if ranks[page] <= pivot:
+                worse.append(page)
+            else:
+                better.append(page)
+        return quciksort_pages(better,ranks) + [pages[0]] + quciksort_pages(worse,ranks)
+    pass
 
 def ordered_search(index, ranks, keyword):
     pages = lookup(index,keyword)
-    if not pages:
-        return None
-    best_page = pages[0]
-    for c in pages:
-        if ranks[c] > ranks[best_page]:
-            best_page = c
-    return best_page
-
-
-
-
-
-
-
-
-
+    return quciksort_pages(pages,ranks)
+    # if not pages:
+    #     return None
+    # best_page = pages[0]
+    # for c in pages:
+    #     if ranks[c] > ranks[best_page]:
+    #         best_page = c
+    # return best_page
 
 
 
